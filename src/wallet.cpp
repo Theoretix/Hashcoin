@@ -1,6 +1,5 @@
-// Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2012 The Hashcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2009-2014 Theoretix Consortium
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "wallet.h"
@@ -298,7 +297,7 @@ bool CWallet::EncryptWallet(const SecureString& strWalletPassphrase)
         if (fFileBacked)
         {
             if (!pwalletdbEncryption->TxnCommit())
-                exit(1); //We now have keys encrypted in memory, but no on disk...die to avoid confusion and let the user reload their unencrypted wallet.
+                exit(1); //We now have keys encrypted in memory, but not on disk...die to avoid confusion and let the user reload their unencrypted wallet.
 
             delete pwalletdbEncryption;
             pwalletdbEncryption = NULL;
@@ -896,7 +895,7 @@ void CWallet::ResendWalletTransactions()
     if (GetTime() < nNextTime)
         return;
     bool fFirst = (nNextTime == 0);
-    nNextTime = GetTime() + GetRand(30 * 60);
+    nNextTime = GetTime() + GetRand(300 * 60);
     if (fFirst)
         return;
 
@@ -917,7 +916,7 @@ void CWallet::ResendWalletTransactions()
             CWalletTx& wtx = item.second;
             // Don't rebroadcast until it's had plenty of time that
             // it should have gotten in already by now.
-            if (nTimeBestReceived - (int64)wtx.nTimeReceived > 5 * 60)
+            if (nTimeBestReceived - (int64)wtx.nTimeReceived > 15 * 60)
                 mapSorted.insert(make_pair(wtx.nTimeReceived, &wtx));
         }
         BOOST_FOREACH(PAIRTYPE(const unsigned int, CWalletTx*)& item, mapSorted)
@@ -927,10 +926,6 @@ void CWallet::ResendWalletTransactions()
         }
     }
 }
-
-
-
-
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1169,8 +1164,6 @@ bool CWallet::SelectCoins(int64 nTargetValue, set<pair<const CWalletTx*,unsigned
 }
 
 
-
-
 bool CWallet::CreateTransaction(const vector<pair<CScript, int64> >& vecSend,
                                 CWalletTx& wtxNew, CReserveKey& reservekey, int64& nFeeRet, std::string& strFailReason)
 {
@@ -1230,7 +1223,7 @@ bool CWallet::CreateTransaction(const vector<pair<CScript, int64> >& vecSend,
                     //The priority after the next block (depth+1) is used instead of the current,
                     //reflecting an assumption the user would accept a bit more delay for
                     //a chance at a free transaction.
-                    dPriority += (double)nCredit * (pcoin.first->GetDepthInMainChain()+1);
+                    dPriority += (double)nCredit * (pcoin.first->GetDepthInMainChain()+36);
                 }
 
                 int64 nChange = nValueIn - nValue - nFeeRet;
@@ -1295,14 +1288,6 @@ bool CWallet::CreateTransaction(const vector<pair<CScript, int64> >& vecSend,
                         return false;
                     }
 
-                // Limit size
-                unsigned int nBytes = ::GetSerializeSize(*(CTransaction*)&wtxNew, SER_NETWORK, PROTOCOL_VERSION);
-                if (nBytes >= MAX_STANDARD_TX_SIZE)
-                {
-                    strFailReason = _("Transaction too large");
-                    return false;
-                }
-                dPriority /= nBytes;
 
                 // Check that enough fee is included
                 int64 nPayFee = nTransactionFee * (1 + (int64)nBytes / 1000);
@@ -1383,8 +1368,6 @@ bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey)
 }
 
 
-
-
 string CWallet::SendMoney(CScript scriptPubKey, int64 nValue, CWalletTx& wtxNew, bool fAskFee)
 {
     CReserveKey reservekey(this);
@@ -1415,7 +1398,6 @@ string CWallet::SendMoney(CScript scriptPubKey, int64 nValue, CWalletTx& wtxNew,
 }
 
 
-
 string CWallet::SendMoneyToDestination(const CTxDestination& address, int64 nValue, CWalletTx& wtxNew, bool fAskFee)
 {
     // Check amount
@@ -1430,8 +1412,6 @@ string CWallet::SendMoneyToDestination(const CTxDestination& address, int64 nVal
 
     return SendMoney(scriptPubKey, nValue, wtxNew, fAskFee);
 }
-
-
 
 
 DBErrors CWallet::LoadWallet(bool& fFirstRunRet)
