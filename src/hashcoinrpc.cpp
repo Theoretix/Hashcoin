@@ -1,6 +1,6 @@
-// Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2012 The Hashcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2014 Dr. Roy Murphy
+// Copyright (c) 2009-2014 Theoretix Consortium
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "chainparams.h"
@@ -114,7 +114,6 @@ std::string HexBits(unsigned int nBits)
 }
 
 
-
 ///
 /// Note: This interface may still be subject to change.
 ///
@@ -169,7 +168,6 @@ Value help(const Array& params, bool fHelp)
     return tableRPC.help(strCommand);
 }
 
-
 Value stop(const Array& params, bool fHelp)
 {
     // Accept the deprecated and ignored 'detach' boolean argument
@@ -182,12 +180,9 @@ Value stop(const Array& params, bool fHelp)
     return "HashCoin server stopping";
 }
 
-
-
 //
 // Call Table
 //
-
 
 static const CRPCCommand vRPCCommands[] =
 { //  name                      actor (function)         okSafeMode threadSafe
@@ -1119,9 +1114,6 @@ Object CallRPC(const string& strMethod, const Array& params)
     return reply;
 }
 
-
-
-
 template<typename T>
 void ConvertTo(Value& value, bool fAllowNull=false)
 {
@@ -1271,9 +1263,6 @@ int CommandLineRPC(int argc, char *argv[])
     }
     return nRet;
 }
-
-
-
 
 #ifdef TEST
 int main(int argc, char *argv[])
