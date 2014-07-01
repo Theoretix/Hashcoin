@@ -1,6 +1,5 @@
-// Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2012 The Hashcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2014 Dr. Roy Murphy
+// Copyright (c) 2009-2014 Theortetix Consortium
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef _HASHCOINRPC_H_
