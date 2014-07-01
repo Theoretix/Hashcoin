@@ -1,6 +1,5 @@
-// Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2012 The Hashcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2009-2014 Theoretix Consortium
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #ifndef HASHCOIN_WALLET_H
 #define HASHCOIN_WALLET_H
@@ -697,9 +696,6 @@ public:
     void RelayWalletTransaction();
 };
 
-
-
-
 class COutput
 {
 public:
@@ -722,42 +718,6 @@ public:
         printf("%s\n", ToString().c_str());
     }
 };
-
-
-
-
-/** Private key that includes an expiration date in case it never gets used. */
-class CWalletKey
-{
-public:
-    CPrivKey vchPrivKey;
-    int64 nTimeCreated;
-    int64 nTimeExpires;
-    std::string strComment;
-    //// todo: add something to note what created it (user, getnewaddress, change)
-    ////   maybe should have a map<string, string> property map
-
-    CWalletKey(int64 nExpires=0)
-    {
-        nTimeCreated = (nExpires ? GetTime() : 0);
-        nTimeExpires = nExpires;
-    }
-
-    IMPLEMENT_SERIALIZE
-    (
-        if (!(nType & SER_GETHASH))
-            READWRITE(nVersion);
-        READWRITE(vchPrivKey);
-        READWRITE(nTimeCreated);
-        READWRITE(nTimeExpires);
-        READWRITE(strComment);
-    )
-};
-
-
-
-
-
 
 /** Account information.
  * Stored in wallet with key "acc"+string account name.
@@ -784,7 +744,6 @@ public:
         READWRITE(vchPubKey);
     )
 };
-
 
 
 /** Internal transfers.
